@@ -14,8 +14,7 @@
   </head>
   <body>
     <div class='jumbotron text-center'> 
-                <h1>{{ head }}</h1>
-                <p> {{ customer.name }} {{ customer.age }} </p>
+                <h1>TODOS</h1>
     </div>
     <div class='container'>
       
@@ -29,13 +28,28 @@
             <br>
             <div class='row'>
                 <input type='checkbox' class='custom-checkbox-1 col-auto hiding-object hide' id='global-check-box'>
-                <input type='text' class='form-control col-md-8' id='task-input' placeholder="Your task">
-                <button class='btn col-auto' id='task-addition'>&#43;</button>
+                <form action="{% url 'addTodo' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form.text }}
+
+                  <input type="submit" value="+" >
+
+                </form>
+
+
+   
+                <!-- <input type='text' class='form-control col-md-8' id='task-input' placeholder="Your task"> -->
+                <!-- <button class='btn col-auto' id='task-addition'>&#43;</button> -->
                 <button class='btn col-auto' id='remove-completed-tasks'>&#128465;</button>
           </div>
             <br>
             <ul class='mr-auto' id='tasks-list'>
-              <!-- {{ todoItem }} -->
+              {% for todo in todo_list %}
+                  <li>
+                    <form href="{% url 'completeTodo' todo.id %}" method="GET">
+                    {{ form.status }} </form>
+                    <span>{{ todo.text }}</span></li>
+              {% endfor %}
           </ul>
       </div>
       <br>
@@ -60,6 +74,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src='{% static "bootstrap.min.js" %}'></script>
     <!-- todo script -->
-    <script src='{% static "todo.js" %}'></script>
+    <!-- <script src='{% static "todo.js" %}'></script> -->
   </body>
 </html>

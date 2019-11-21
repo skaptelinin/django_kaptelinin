@@ -1,32 +1,30 @@
-from django.shortcuts import render
-
-# Create your views here.
-
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 import random
+from django.db import models
 from .models import TodoItem
-
-todos = []
-task = TodoItem()
-
-def new_task(request):
-    if request.method == 'POST':
-        task.text = request.POST("text")
-        task.status = request.POST("status")
-        task.indentificator = request.POST("id")
-        task.save()
-    todos.append(task)
-    return todos
-
+from .forms import TodoInputForm
+from django.views.decorators.http import require_POST   
 
 def index(request):
-    header = new_task(request)
-    user = {'name': "Alex", 'age': 15}
-    task = TodoItem()
-    data = {'head': header, 'customer': user, 'task': task}
+    todo_list = TodoItem.objects.order_by('id')
+    input_form = TodoInputForm()
+    data = {'form': input_form, 'todo_list': todo_list}
     return TemplateResponse(request, "index.html", context=data)
 
+def completeTodo(request, todo_id):
+    task = TodoItem.objects.get(pk = todo_id)
+    task.status = TodoInputForm(request.GET['status'])
+    task.save()
+    return redirect('index')
+
+@require_POST
+def addTodo(request):
+    input_form = TodoInputForm(request.POST)
+    task = TodoItem(text = request.POST['text'])
+    task.save()
+    return redirect('index')
 
 
 
@@ -43,11 +41,14 @@ def index(request):
 
 
 
-def about(request):
-    return HttpResponse("<h1>We are fraction FRACTION</h1>")
 
-def adress(request):
-    numb = request.GET.get("numb", "")
-    name = request.GET.get("name", "")
-    output = "<h1>Number {0}, Name {1}</h1>".format(numb, name)
-    return HttpResponse(output)
+
+
+# def about(request):
+#     return HttpResponse("<h1>We are fraction FRACTION</h1>")
+
+# def adress(request):
+#     numb = request.GET.get("numb", "")
+#     name = request.GET.get("name", "")
+#     output = "<h1>Number {0}, Name {1}</h1>".format(numb, name)
+#     return HttpResponse(output)

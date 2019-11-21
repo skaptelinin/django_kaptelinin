@@ -1,4 +1,5 @@
-# from django import forms
+from django import forms
  
-# class TodoForm(forms.Form):
-#     taskInput = forms.CharField()
+class TodoInputForm(forms.Form):
+    text = forms.CharField()
+    status = forms.BooleanField()

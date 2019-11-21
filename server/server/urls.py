@@ -20,6 +20,6 @@ from todoapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('about', views.about, name='about'),
-    path('adress/', views.adress, name='adress'),
+    path('addTodo', views.addTodo, name='addTodo'),
+    path('completeTodo/<todo_id>', views.completeTodo, name='completeTodo'),
 ]

@@ -191,17 +191,6 @@ $(() => {
         text: newTask,
       };
 
-      $.ajax({
-        url: '',
-        type: 'POST',
-        data: {
-          id: Math.random(),
-          status: false,
-          text: newTask,
-        },
-        success:() => console.log(3728371283)
-      })
-
       todoList.push(todoTask);
       showLatestTask(todoList);
       renderWithSwitch();
