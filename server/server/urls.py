@@ -22,4 +22,10 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('addTodo', views.addTodo, name='addTodo'),
     path('completeTodo/<todo_id>', views.completeTodo, name='completeTodo'),
+    path('deleteCompleted', views.deleteCompleted, name='deleteCompleted'),
+    path('deleteTodo/<todo_id>', views.deleteTodo, name='deleteTodo'),
+    path('checkAll', views.checkAll, name='checkAll'),
+    path('showAll', views.showAll, name='showAll'),
+    path('showCompleted', views.showCompleted, name='showCompleted'),
+    path('showInProgress', views.showInProgress, name='showInProgress'),
 ]

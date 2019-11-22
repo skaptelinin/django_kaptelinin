@@ -149,11 +149,25 @@ dl, ol, ul, li {
     margin-left: auto;
     margin-right: auto;
     list-style-type: none;
+    padding-inline-start: 0;
     
 }
 
 ol ol, ol ul, ul ol, ul ul {
     margin-bottom: 0
+}
+
+.todo-task {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-button {
+    display: inline-block;
+    display: flex;
+    align-items: center;
 }
 
 dt {

@@ -18,52 +18,81 @@
     </div>
     <div class='container'>
       
-      <div class="controls">
-            <div class='hiding-object' id='notification'><h3>What would you want to do?</h3></div>
             <div class='row'>
-            <div class='col hiding-object' id='counter-in-progress'></div>
-            <div class='col hiding-object' id='counter-complete'></div>
+            <div class='col'>{{ completed }} tasks completed</div>
+            <div class='col'>{{ in_progress }} tasks in progress</div>
             </div>
-          </div>
+
             <br>
             <div class='row'>
-                <input type='checkbox' class='custom-checkbox-1 col-auto hiding-object hide' id='global-check-box'>
+                {% if in_progress or completed %}
+                <form action="{% url 'checkAll' %}" method="POST">
+                    {% csrf_token %}
+                    {% if in_progress %}
+                    <input type="submit" value="&#9633" >
+                    {% else %}
+                    <input type="submit" value="&#128505" >
+                    {% endif %}
+                </form>
+                {% endif %}
+
                 <form action="{% url 'addTodo' %}" method="POST">
                     {% csrf_token %}
                     {{ form.text }}
-
                   <input type="submit" value="+" >
-
                 </form>
 
-
-   
-                <!-- <input type='text' class='form-control col-md-8' id='task-input' placeholder="Your task"> -->
-                <!-- <button class='btn col-auto' id='task-addition'>&#43;</button> -->
-                <button class='btn col-auto' id='remove-completed-tasks'>&#128465;</button>
+                <form action="{% url 'deleteCompleted' %}" method="POST">
+                    {% csrf_token %}
+                  <input type="submit" value="&#128465;" >
+                </form>
           </div>
             <br>
             <ul class='mr-auto' id='tasks-list'>
               {% for todo in todo_list %}
-                  <li>
-                    <form href="{% url 'completeTodo' todo.id %}" method="GET">
-                    {{ form.status }} </form>
-                    <span>{{ todo.text }}</span></li>
+                  <li class="todo-task">
+
+                      {% if todo.status %}
+                      <form class="todo-button" action="{% url 'completeTodo' todo.id %}" method="POST">
+                          {% csrf_token %}
+                          <input type="submit" value="&#128505" >
+                        </form>
+                        <span class="task-text" style="opacity: 0.4;">{{ todo.text }}</span>
+                        {% else %}
+                        <form class="todo-button" action="{% url 'completeTodo' todo.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="submit" value="&#9633" >
+                          </form>
+                          <span class="task-text" >{{ todo.text }}</span>
+                          {% endif %}
+                    <form class="todo-button" action="{% url 'deleteTodo' todo.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="&#10006" >
+                      </form>
+                  </li>
               {% endfor %}
           </ul>
-      </div>
+      
       <br>
-            <!-- <button class="btn" id="show-first-page">&larr;</button> -->
             <div id="pagination-block">
              </div>
-            <!-- <button class="btn" id="show-last-page">&rarr;</button> -->
             <br>
-            <button class='btn tab hint' id='all-tasks'>Show all tasks</button>
-            <button class='btn tab' id='completed-tasks'>Show completed tasks</button>
-            <button class='btn tab' id='tasks-in-progress'>Show tasks in progress</button>
+            <div class="row">
+                <form class="todo-button" action="{% url 'showAll' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="nav-button {% if todo_selector == 'show all tasks' %} hint {% endif %}" class="hint" type="submit" value="Show all tasks" >
+                  </form>
+                  <form class="todo-button" action="{% url 'showCompleted' %}" method="POST">
+                      {% csrf_token %}
+                      <input class="nav-button {% if todo_selector == 'show completed tasks' %} hint {% endif %}" type="submit" value="Show completed tasks" >
+                    </form>
+                    <form class="todo-button" action="{% url 'showInProgress' %}" method="POST">
+                        {% csrf_token %}
+                        <input class="nav-button {% if todo_selector == 'show tasks in progress' %} hint {% endif %}" type="submit" value="Show tasks in progress" >
+                      </form> 
+            </div>
                
     </div>
-
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -74,6 +103,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src='{% static "bootstrap.min.js" %}'></script>
     <!-- todo script -->
-    <!-- <script src='{% static "todo.js" %}'></script> -->
+    <script src='{% static "double-click.js" %}'></script>
   </body>
 </html>
