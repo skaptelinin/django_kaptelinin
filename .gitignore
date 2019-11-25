@@ -1,2 +1,6 @@
 .history/
 __pycache__
+server/static/admin/
+server_nginx.conf
+uwsgi_params
+mysite_uwsgi.ini

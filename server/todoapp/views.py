@@ -10,9 +10,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re 
 
 todo_selector = 'show all tasks'
-
 page = 1
-paginator = Paginator(TodoItem.objects.all(), 5)
 
 def todoRender():
     if todo_selector == 'show all tasks':
@@ -50,7 +48,7 @@ def index(request):
 @require_POST
 def addTodo(request):
     global page
-    page = TodoItem.objects.all().count()+1
+    page = TodoItem.objects.all().count() + 1
     global todo_selector
     todo_selector = 'show all tasks'
     input_form = request.POST['text'].strip()
@@ -69,10 +67,8 @@ def completeTodo(request, todo_id):
     return redirect('index')
 
 def deleteTodo(request, todo_id):
-    # global page
     task = TodoItem.objects.get(pk = todo_id)
     task.delete()
-    # page = paginator.num_pages
 
     return redirect('index')
 
