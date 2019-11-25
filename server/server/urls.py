@@ -28,4 +28,6 @@ urlpatterns = [
     path('showAll', views.showAll, name='showAll'),
     path('showCompleted', views.showCompleted, name='showCompleted'),
     path('showInProgress', views.showInProgress, name='showInProgress'),
+    path('editTodo/<todo_id>', views.editTodo, name='editTodo'),
+    path('turnPage/<page_number>', views.turnPage, name='turnPage'),
 ]

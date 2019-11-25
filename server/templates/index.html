@@ -9,7 +9,7 @@
        <!-- Bootstrap CSS -->
        <link rel="stylesheet" type="text/css" href='{% static "bootstrap.min.css" %}' />
 
-    <title>My first todo on jQuery</title>
+    <title>My first todo on Django</title>
 
   </head>
   <body>
@@ -18,77 +18,77 @@
     </div>
     <div class='container'>
       
-            <div class='row'>
+            <div class='row counters'>
             <div class='col'>{{ completed }} tasks completed</div>
             <div class='col'>{{ in_progress }} tasks in progress</div>
             </div>
-
-            <br>
-            <div class='row'>
+            <div class='row main-input'>
                 {% if in_progress or completed %}
                 <form action="{% url 'checkAll' %}" method="POST">
                     {% csrf_token %}
-                    {% if in_progress %}
-                    <input type="submit" value="&#9633" >
-                    {% else %}
-                    <input type="submit" value="&#128505" >
-                    {% endif %}
+                    <input class="btn" type="submit" 
+                    value="{% if in_progress %}&#9633{% else %}&#128505{% endif %}" >
                 </form>
                 {% endif %}
 
-                <form action="{% url 'addTodo' %}" method="POST">
+                <form class="row col-md-10 
+                {% if not in_progress and not completed %}main-input_fill{% endif %}" 
+                action="{% url 'addTodo' %}" method="POST">
                     {% csrf_token %}
                     {{ form.text }}
-                  <input type="submit" value="+" >
+                  <input class="btn" type="submit" value="Add" >
                 </form>
 
                 <form action="{% url 'deleteCompleted' %}" method="POST">
                     {% csrf_token %}
-                  <input type="submit" value="&#128465;" >
+                  <input class="btn" type="submit" value="&#128465;" >
                 </form>
           </div>
-            <br>
-            <ul class='mr-auto' id='tasks-list'>
+            <ul class='todo-list' id='tasks-list'>
               {% for todo in todo_list %}
                   <li class="todo-task">
-
-                      {% if todo.status %}
                       <form class="todo-button" action="{% url 'completeTodo' todo.id %}" method="POST">
                           {% csrf_token %}
-                          <input type="submit" value="&#128505" >
+                          <input class="btn" type="submit" 
+                          value="{% if todo.status %}&#128505{% else %}&#9633{% endif %}" >
                         </form>
-                        <span class="task-text" style="opacity: 0.4;">{{ todo.text }}</span>
-                        {% else %}
-                        <form class="todo-button" action="{% url 'completeTodo' todo.id %}" method="POST">
-                            {% csrf_token %}
-                            <input type="submit" value="&#9633" >
-                          </form>
-                          <span class="task-text" >{{ todo.text }}</span>
-                          {% endif %}
+                          <span class="col-md-10 task-text {% if todo.status %}task-text_decrease-opacity{% endif %}" 
+                          id="{{ todo.id }}">{{ todo.text }}</span>
                     <form class="todo-button" action="{% url 'deleteTodo' todo.id %}" method="POST">
                         {% csrf_token %}
-                        <input type="submit" value="&#10006" >
+                        <input class="btn" type="submit" value="&#10006" >
                       </form>
                   </li>
               {% endfor %}
           </ul>
-      
-      <br>
-            <div id="pagination-block">
-             </div>
-            <br>
-            <div class="row">
+      <div class="row pagination">
+          <span class="step-links">
+              {% if todo_list.has_previous %}
+                  <a href="{% url 'turnPage' todo_list.previous_page_number %}">previous</a>
+              {% endif %}
+              <span class="current">
+                  Page {{ todo_list.number }} of {{ todo_list.paginator.num_pages }}
+              </span>
+              {% if todo_list.has_next %}
+                  <a href="{% url 'turnPage' todo_list.next_page_number %}">next</a>
+              {% endif %}
+          </span>
+      </div>
+            <div class="row navigation">
                 <form class="todo-button" action="{% url 'showAll' %}" method="POST">
                     {% csrf_token %}
-                    <input class="nav-button {% if todo_selector == 'show all tasks' %} hint {% endif %}" class="hint" type="submit" value="Show all tasks" >
+                    <input class="btn {% if selector == 'show all tasks' %}hint{% endif %}" 
+                    type="submit" value="Show all tasks" >
                   </form>
                   <form class="todo-button" action="{% url 'showCompleted' %}" method="POST">
                       {% csrf_token %}
-                      <input class="nav-button {% if todo_selector == 'show completed tasks' %} hint {% endif %}" type="submit" value="Show completed tasks" >
+                      <input class="btn {% if selector == 'show completed tasks' %}hint{% endif %}" 
+                      type="submit" value="Show completed tasks" >
                     </form>
                     <form class="todo-button" action="{% url 'showInProgress' %}" method="POST">
                         {% csrf_token %}
-                        <input class="nav-button {% if todo_selector == 'show tasks in progress' %} hint {% endif %}" type="submit" value="Show tasks in progress" >
+                        <input class="btn {% if selector == 'show tasks in progress' %}hint{% endif %}"
+                         type="submit" value="Show tasks in progress" >
                       </form> 
             </div>
                
@@ -97,12 +97,11 @@
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src='{% static "bootstrap.min.js" %}'></script>
-    <!-- todo script -->
+    <!-- double-click script -->
     <script src='{% static "double-click.js" %}'></script>
   </body>
 </html>

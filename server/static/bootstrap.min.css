@@ -113,31 +113,9 @@ address {
     word-break: break-word
 }
 
-/* .counter-complete {
-    background-color: transparent;
-    border: 1px #212529;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    text-align: center;
-    vertical-align: middle;
-    float: left; 
-    display: inline-block
+.counters {
+    margin-bottom: 4%;
 }
-
-.counter-in-progress {
-    background-color: transparent;
-    border: 1px #212529;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    text-align: center;
-    vertical-align: middle;
-    display: inline-block;
-    float: right
-} */
 
 .notification {
     text-align: center
@@ -164,10 +142,45 @@ ol ol, ol ul, ul ol, ul ul {
     align-items: center;
 }
 
+.task-text_decrease-opacity {
+    opacity: 0.4;
+}
+
+.task-text {
+    word-break: break-all;
+}
+
+div.row.main-input {
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5% 0;
+}
+
+form.row.main-input_fill {
+    margin-left: 8%;
+}
+
+form.row {
+    justify-content: space-around; 
+}
+
+.todo-list {
+    margin-top: 4%;
+}
+
 .todo-button {
     display: inline-block;
     display: flex;
     align-items: center;
+}
+
+div.navigation {
+    justify-content: space-evenly;
+}
+
+.pagination {
+    justify-content: center;
+    margin-bottom: 1%;
 }
 
 dt {
