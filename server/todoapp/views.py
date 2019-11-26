@@ -4,7 +4,6 @@ from django.template.response import TemplateResponse
 from django.db import models
 from .models import TodoItem
 from .forms import TodoInputForm
-from .forms import TodoEditForm
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re 
@@ -42,7 +41,6 @@ def index(request):
         'in_progress': todo_in_progress,
         'selector': todo_selector, 
     }
-
     return TemplateResponse(request, "index.html", context=data)
 
 @require_POST
@@ -56,25 +54,21 @@ def addTodo(request):
         input_form = re.sub(r'\s+', ' ', input_form)
         task = TodoItem(text = input_form)
         task.save()
-
     return redirect('index')
 
 def completeTodo(request, todo_id):
     task = TodoItem.objects.get(pk = todo_id)
     task.status = not task.status
     task.save()
-
     return redirect('index')
 
 def deleteTodo(request, todo_id):
     task = TodoItem.objects.get(pk = todo_id)
     task.delete()
-
     return redirect('index')
 
 def deleteCompleted(request):
-    TodoItem.objects.filter(status__exact = True).delete()
-    
+    TodoItem.objects.filter(status = True).delete()    
     return redirect('index')
 
 def checkAll(request):
@@ -82,7 +76,6 @@ def checkAll(request):
         TodoItem.objects.all().update(status = True)
     else:
         TodoItem.objects.all().update(status = False)
-
     return redirect('index')
 
 def showAll(request):
@@ -90,7 +83,6 @@ def showAll(request):
     global page
     todo_selector = 'show all tasks'
     page = 1
-
     return redirect('index')
 
 def showCompleted(request):
@@ -98,7 +90,6 @@ def showCompleted(request):
     global page
     todo_selector = 'show completed tasks'
     page = 1
-
     return redirect('index')
 
 def showInProgress(request):
@@ -106,7 +97,6 @@ def showInProgress(request):
     global page
     todo_selector = 'show tasks in progress'
     page = 1
-
     return redirect('index')
 
 def editTodo(request, todo_id):
@@ -117,12 +107,10 @@ def editTodo(request, todo_id):
         input_form = re.sub(r'\s+', ' ', input_form)
         task.text = input_form
         task.save()
-
     return redirect('index')
 
 def turnPage(request, page_number):
     global page
     page = page_number
-
     return redirect('index')
 
