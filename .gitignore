@@ -6,3 +6,4 @@ uwsgi_params
 mysite_uwsgi.ini
 test.py
 .test.py.swp
+server/static/todo.js

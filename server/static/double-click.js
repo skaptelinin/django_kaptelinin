@@ -5,10 +5,29 @@ $(() => {
   let textId;
   let textValue;
 
+  const protectFromScript = originalInputValue => {
+    let newInputValue = String(originalInputValue);
+
+    newInputValue = newInputValue.replace(/&/u, '&amp;')
+      .replace(/</gu, '&lt;')
+      .replace(/>/gu, '&gt;')
+      .replace(/"/gu, '&quot;')
+      .replace(/'/gu, '&apos;')
+      .replace(/\//gu, '&frasl;')
+      .replace(/\$/gu, '&#36;')
+      .replace(/\[/gu, '&#91;')
+      .replace(/\]/gu, '&#93;')
+      .replace(/\{/gu, '&#123;')
+      .replace(/\}/gu, '&#125;')
+      .replace(/ {1,}/gu, ' ');
+
+    return newInputValue;
+  };
+
   $tasksList.on('dblclick', '.task-text', function() {
     textId = $(this).attr('id');
     textClasses = $(this).attr('class');
-    textValue = $(this).text();
+    textValue = protectFromScript($(this).text());
     $(this).replaceWith(`<form class="col-md-10" id="edit-form" 
     action="/editTodo/${$(this).attr('id')}" method = "POST">
     <input type="hidden" name="csrfmiddlewaretoken"
