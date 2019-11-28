@@ -25,12 +25,12 @@
             <div class='row main-input'>
                 {% if in_progress or completed %}
                 {% if in_progress %}
-                <form action="{% url 'checkAll' %}" method="POST">
+                <form action="{% url 'check_all' %}" method="POST">
                     {% csrf_token %}
                     <input class="btn" type="submit" value="&#9633" >
                 </form>
                 {% else %}
-                <form action="{% url 'uncheckAll' %}" method="POST">
+                <form action="{% url 'uncheck_all' %}" method="POST">
                     {% csrf_token %}
                     <input class="btn" type="submit" value="&#128505" >
                 </form>
@@ -39,34 +39,38 @@
 
                 <form class="row col-md-10 
                 {% if not in_progress and not completed %}main-input_fill{% endif %}" 
-                action="{% url 'addTodo' %}" method="POST">
+                action="{% url 'add_todo' %}" method="POST">
                     {% csrf_token %}
                     {{ form.text }}
                   <input class="btn" type="submit" value="Add" >
                 </form>
 
-                <form action="{% url 'deleteCompleted' %}" method="POST">
+                <form action="{% url 'delete_completed' %}" method="POST">
                     {% csrf_token %}
                   <input class="btn" type="submit" value="&#128465;" >
                 </form>
           </div>
             <ul class='todo-list' id='tasks-list'>
               {% for todo in todo_list %}
-                  <li class="todo-task">
+                  <li class="todo-task" id="{{ todo.id }}">
                       {% if todo.status %}
-                      <form class="todo-button" action="{% url 'uncheckTodo' todo.id %}" method="POST">
+                      <form class="todo-button" action="{% url 'uncheck_todo' todo.id %}" method="POST">
                           {% csrf_token %}
                           <input class="btn" type="submit" value="&#128505" >
                       </form>
                       {% else %}
-                      <form class="todo-button" action="{% url 'checkTodo' todo.id %}" method="POST">
+                      <form class="todo-button" action="{% url 'check_todo' todo.id %}" method="POST">
                           {% csrf_token %}
                           <input class="btn" type="submit" value="&#9633" >
                       </form>
                       {% endif %}
-                          <span class="col-md-10 task-text {% if todo.status %}task-text_decrease-opacity{% endif %}" 
-                          id="{{ todo.id }}">{{ todo.text }}</span>
-                    <form class="todo-button" action="{% url 'deleteTodo' todo.id %}" method="POST">
+                          <span class="col-md-10 task-text {% if todo.status %}task-text_decrease-opacity{% endif %}" >{{ todo.text }}</span>
+                          <form class="row col-md-10 hide"
+                          action="{% url 'edit_todo' todo.id %}" method="POST">
+                              {% csrf_token %}
+                              {{ edit_form.text }}
+                          </form>
+                    <form class="todo-button" action="{% url 'delete_todo' todo.id %}" method="POST">
                         {% csrf_token %}
                         <input class="btn" type="submit" value="&#10006" >
                       </form>
@@ -76,30 +80,30 @@
       <div class="row pagination">
           <span class="step-links">
               {% if todo_list.has_previous %}
-                  <a href="{% url 'turnPage' todo_list.previous_page_number %}">previous</a>
+                  <a href="{% url 'turn_page' todo_list.previous_page_number %}">previous</a>
               {% endif %}
               <span class="current">
                   Page {{ todo_list.number }} of {{ todo_list.paginator.num_pages }}
               </span>
               {% if todo_list.has_next %}
-                  <a href="{% url 'turnPage' todo_list.next_page_number %}">next</a>
+                  <a href="{% url 'turn_page' todo_list.next_page_number %}">next</a>
               {% endif %}
           </span>
       </div>
             <div class="row navigation">
-                <form class="todo-button" action="{% url 'showAll' %}" method="POST">
+                <form class="todo-button" action="{% url 'show_all' %}" method="POST">
                     {% csrf_token %}
-                    <input class="btn {% if selector == 'show all tasks' %}hint{% endif %}" 
+                    <input class="btn {% if selector == 'SHOW_ALL_TASKS' %}hint{% endif %}" 
                     type="submit" value="Show all tasks" >
                   </form>
-                  <form class="todo-button" action="{% url 'showCompleted' %}" method="POST">
+                  <form class="todo-button" action="{% url 'show_completed' %}" method="POST">
                       {% csrf_token %}
-                      <input class="btn {% if selector == 'show completed tasks' %}hint{% endif %}" 
+                      <input class="btn {% if selector == 'SHOW_COMPLETED_TASKS' %}hint{% endif %}" 
                       type="submit" value="Show completed tasks" >
                     </form>
-                    <form class="todo-button" action="{% url 'showInProgress' %}" method="POST">
+                    <form class="todo-button" action="{% url 'show_in_progress' %}" method="POST">
                         {% csrf_token %}
-                        <input class="btn {% if selector == 'show tasks in progress' %}hint{% endif %}"
+                        <input class="btn {% if selector == 'SHOW_TASKS_IN_PROGRESS' %}hint{% endif %}"
                          type="submit" value="Show tasks in progress" >
                       </form> 
             </div>
