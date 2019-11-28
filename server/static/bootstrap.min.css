@@ -184,6 +184,10 @@ div.navigation {
     margin-top: 2%;
 }
 
+.btn_checked {
+    box-shadow: 0 0 0 .2rem red; 
+}
+
 dt {
     font-weight: 700
 }

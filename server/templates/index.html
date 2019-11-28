@@ -32,7 +32,7 @@
                 {% else %}
                 <form action="{% url 'uncheck_all' %}" method="POST">
                     {% csrf_token %}
-                    <input class="btn" type="submit" value="&#128505" >
+                    <input class="btn btn_checked" type="submit" value="&#10004" >
                 </form>
                 {% endif %}
                 {% endif %}
@@ -56,7 +56,7 @@
                       {% if todo.status %}
                       <form class="todo-button" action="{% url 'uncheck_todo' todo.id %}" method="POST">
                           {% csrf_token %}
-                          <input class="btn" type="submit" value="&#128505" >
+                          <input class="btn btn_checked" type="submit" value="&#10004" >
                       </form>
                       {% else %}
                       <form class="todo-button" action="{% url 'check_todo' todo.id %}" method="POST">
