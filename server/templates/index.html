@@ -24,11 +24,17 @@
             </div>
             <div class='row main-input'>
                 {% if in_progress or completed %}
+                {% if in_progress %}
                 <form action="{% url 'checkAll' %}" method="POST">
                     {% csrf_token %}
-                    <input class="btn" type="submit" 
-                    value="{% if in_progress %}&#9633{% else %}&#128505{% endif %}" >
+                    <input class="btn" type="submit" value="&#9633" >
                 </form>
+                {% else %}
+                <form action="{% url 'uncheckAll' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="btn" type="submit" value="&#128505" >
+                </form>
+                {% endif %}
                 {% endif %}
 
                 <form class="row col-md-10 
@@ -47,11 +53,17 @@
             <ul class='todo-list' id='tasks-list'>
               {% for todo in todo_list %}
                   <li class="todo-task">
-                      <form class="todo-button" action="{% url 'completeTodo' todo.id %}" method="POST">
+                      {% if todo.status %}
+                      <form class="todo-button" action="{% url 'uncheckTodo' todo.id %}" method="POST">
                           {% csrf_token %}
-                          <input class="btn" type="submit" 
-                          value="{% if todo.status %}&#128505{% else %}&#9633{% endif %}" >
-                        </form>
+                          <input class="btn" type="submit" value="&#128505" >
+                      </form>
+                      {% else %}
+                      <form class="todo-button" action="{% url 'checkTodo' todo.id %}" method="POST">
+                          {% csrf_token %}
+                          <input class="btn" type="submit" value="&#9633" >
+                      </form>
+                      {% endif %}
                           <span class="col-md-10 task-text {% if todo.status %}task-text_decrease-opacity{% endif %}" 
                           id="{{ todo.id }}">{{ todo.text }}</span>
                     <form class="todo-button" action="{% url 'deleteTodo' todo.id %}" method="POST">

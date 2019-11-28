@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.template.response import TemplateResponse
 from django.db import models
 from .models import TodoItem
@@ -43,6 +43,11 @@ def index(request):
     }
     return TemplateResponse(request, "index.html", context=data)
 
+def errorMessage():
+    h1row = '<h1>Oops! Something goes wrong.</h1>'
+    h3row = '<h3>Try go back and reload todo page</h3>'
+    return HttpResponse(h1row + h3row)
+
 @require_POST
 def addTodo(request):
     global page
@@ -56,15 +61,30 @@ def addTodo(request):
         task.save()
     return redirect('index')
 
-def completeTodo(request, todo_id):
-    task = TodoItem.objects.get(pk = todo_id)
-    task.status = not task.status
-    task.save()
+def checkTodo(request, todo_id):
+    try:
+        task = TodoItem.objects.get(pk = todo_id)
+        task.status = True
+        task.save()
+    except TodoItem.DoesNotExist:
+        return errorMessage()
+    return redirect('index')
+
+def uncheckTodo(request, todo_id):
+    try:
+        task = TodoItem.objects.get(pk = todo_id)
+        task.status = False
+        task.save()
+    except TodoItem.DoesNotExist:
+        return errorMessage()
     return redirect('index')
 
 def deleteTodo(request, todo_id):
-    task = TodoItem.objects.get(pk = todo_id)
-    task.delete()
+    try:
+        task = TodoItem.objects.get(pk = todo_id)
+        task.delete()
+    except TodoItem.DoesNotExist:
+        return errorMessage()
     return redirect('index')
 
 def deleteCompleted(request):
@@ -72,10 +92,11 @@ def deleteCompleted(request):
     return redirect('index')
 
 def checkAll(request):
-    if TodoItem.objects.filter(status = False).count():
-        TodoItem.objects.all().update(status = True)
-    else:
-        TodoItem.objects.all().update(status = False)
+    TodoItem.objects.all().update(status = True)
+    return redirect('index')
+
+def uncheckAll(request):
+    TodoItem.objects.all().update(status = False)
     return redirect('index')
 
 def showAll(request):
@@ -100,13 +121,15 @@ def showInProgress(request):
     return redirect('index')
 
 def editTodo(request, todo_id):
-    task = TodoItem.objects.get(pk = todo_id)
-    input_form = request.POST['edit-text'].strip()
-    print('text is ', input_form)
-    if len(input_form):
-        input_form = re.sub(r'\s+', ' ', input_form)
-        task.text = input_form
-        task.save()
+    try:
+        task = TodoItem.objects.get(pk = todo_id)
+        input_form = request.POST['edit-text'].strip()
+        if len(input_form):
+            input_form = re.sub(r'\s+', ' ', input_form)
+            task.text = input_form
+            task.save()
+    except TodoItem.DoesNotExist:
+        return errorMessage()
     return redirect('index')
 
 def turnPage(request, page_number):
