@@ -124,12 +124,6 @@ def show_in_progress(request):
 
 def edit_todo(request, todo_id):
     try:
-        # task = TodoItem.objects.get(pk=todo_id)
-        # input_form = request.POST['edit-text'].strip()
-        # if len(input_form):
-        #     input_form = re.sub(r'\s+', ' ', input_form)
-        #     task.text = input_form
-        #     task.save()
         task = TodoItem.objects.get(pk=todo_id)
         input_form = TodoEditForm(data=request.POST)
         if input_form.is_valid():

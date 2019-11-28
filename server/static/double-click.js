@@ -27,8 +27,8 @@ $(() => {
     textValue = protectFromScript($(this).text());
     $(this).addClass('hide');
     $(this).next().removeClass('hide');
-    $('#id_edit_text').focus();
-    $('#id_edit_text').val(textValue);
+    $(this).next().children('[type="text"]')
+    .focus().val(textValue);
   });
 
   $(document).on('blur', '#id_edit_text', function() {
